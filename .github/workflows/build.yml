@@ -2,7 +2,7 @@ name: Build/Release
 on:
   push:
     tags:
-      - 'v*' # Se activa cuando creas una etiqueta de versión como v1.0.0
+      - 'v*'
 
 jobs:
   release:
@@ -13,26 +13,26 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Actualizado a v4
 
       - name: Install Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # Actualizado a v4
         with:
           node-version: 20
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build Electron App
+      - name: Build Electron App (Windows)
         run: npm run dist:win
         if: matrix.os == 'windows-latest'
 
-      - name: Build Linux App
+      - name: Build Electron App (Linux)
         run: npm run dist:linux
         if: matrix.os == 'ubuntu-latest'
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4 # <--- ¡ESTE ES EL CAMBIO CLAVE!
         with:
           name: Tack-${{ matrix.os }}
-          path: dist/*.exe
+          path: dist/*
