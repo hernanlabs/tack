@@ -32,7 +32,7 @@ Tack is built with a **High-End Dark Aesthetic** designed to minimize eye strain
 Tack is available as a **portable application** (no installation required) and as an **open-source project** for developers.
 
 ### 📥 For Users (Ready to Run)
-1. **Download** the latest version for your operating system from the [Releases](tu-enlace-a-releases) section.
+1. **Download** the latest version for your operating system from the [Releases](https://github.com/hernanlabs/tack/releases) section.
    * **Windows:** Download `Tack-Portable.exe`.
    * **Linux:** Download `Tack.AppImage`.
 2. **Run:** Move the file to its own folder (to keep your `tack_db.json` organized) and double-click to start.
