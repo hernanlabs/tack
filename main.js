@@ -4,8 +4,16 @@ const fs = require('fs');
 
 let mainWindow;
 
-// Definimos la ruta de la base de datos en la misma carpeta del programa
-const DB_PATH = path.join(app.getAppPath(), 'tack_db.json');
+// --- CONFIGURACIÓN DE LA BASE DE DATOS ---
+// Usamos 'userData' para que funcione en versiones instaladas/portables
+const userDataPath = app.getPath('userData'); 
+const DB_PATH = path.join(userDataPath, 'tack_db.json');
+
+// Verificación inicial: Si no existe el archivo en la carpeta de usuario, lo creamos
+if (!fs.existsSync(DB_PATH)) {
+    const initialData = { tareas: [], registros: [] };
+    fs.writeFileSync(DB_PATH, JSON.stringify(initialData, null, 2));
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -13,44 +21,50 @@ function createWindow() {
         height: 800,
         minWidth: 1000,
         minHeight: 700,
-        backgroundColor: '#050505', // Fondo oscuro nativo
+        backgroundColor: '#050505',
         title: 'Tack',
         titleBarStyle: 'hiddenInset',
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
-            // Enviamos la ruta de la DB al render para que sepa dónde guardar
+            // Enviamos la nueva ruta segura al render
             additionalArguments: [`--db-path=${DB_PATH}`]
         }
     });
 
     mainWindow.loadFile('index.html');
-
-    // mainWindow.webContents.openDevTools(); // Activar para debugging
 }
 
 // --- COMUNICACIÓN IPC ---
 
-// Manejo de Pantalla Completa
 ipcMain.on('toggle-fullscreen', () => {
     if (mainWindow) {
-        const isFullScreen = mainWindow.isFullScreen();
-        mainWindow.setFullScreen(!isFullScreen);
+        mainWindow.setFullScreen(!mainWindow.isFullScreen());
     }
 });
 
-// Lógica de Persistencia Local (Lectura/Escritura de archivos)
+// Lectura de DB
 ipcMain.handle('read-db', () => {
-    if (fs.existsSync(DB_PATH)) {
-        return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    try {
+        if (fs.existsSync(DB_PATH)) {
+            return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+        }
+    } catch (error) {
+        console.error("Error leyendo la DB:", error);
     }
-    return { tareas: [], registros: [] }; // DB Inicial si no existe
+    return { tareas: [], registros: [] };
 });
 
+// Escritura de DB
 ipcMain.handle('save-db', (event, data) => {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-    return true;
+    try {
+        fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+        return true;
+    } catch (error) {
+        console.error("Error guardando la DB:", error);
+        return false;
+    }
 });
 
 // Ciclo de vida
