@@ -1,5 +1,5 @@
 node_modules/
 dist/
-.DS_Store
-package-lock.json
 tack_db.json
+.DS_Store
+*.log

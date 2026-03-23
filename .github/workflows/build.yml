@@ -1,0 +1,38 @@
+name: Build/Release
+on:
+  push:
+    tags:
+      - 'v*' # Se activa cuando creas una etiqueta de versión como v1.0.0
+
+jobs:
+  release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Electron App
+        run: npm run dist:win
+        if: matrix.os == 'windows-latest'
+
+      - name: Build Linux App
+        run: npm run dist:linux
+        if: matrix.os == 'ubuntu-latest'
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Tack-${{ matrix.os }}
+          path: dist/*.exe

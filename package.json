@@ -1,12 +1,44 @@
 {
-  "name": "tack-log",
+  "name": "tack",
   "version": "1.0.0",
-  "main": "main.js", 
+  "description": "High-End Productivity Framework for Developers by HabitOS",
+  "main": "main.js",
+  "author": "HabitOS",
+  "developer": "Naxubik",
+  "license": "ISC",
   "scripts": {
-  "start": "GTK_MUFFLE_WARNINGS=1 electron ."
-},
+    "start": "electron .",
+    "build:linux": "electron-builder --linux --dir",
+    "build:win": "electron-builder --windows --dir",
+    "dist:linux": "electron-builder --linux AppImage",
+    "dist:win": "electron-builder --win portable"
+  },
   "devDependencies": {
-    "electron": "^latest"
+    "electron": "latest",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.habitos.tack",
+    "productName": "Tack",
+    "copyright": "Copyright © 2026 HabitOS",
+    "directories": {
+      "output": "dist"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "files": [
+      "**/*",
+      "!dist/*",
+      "!tack_db.json"
+    ]
   }
 }
-

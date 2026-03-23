@@ -1,45 +1,74 @@
-⏱️ Tack
-High-End Productivity Framework for Developers.
+# ⏱️ Tack
+**Master your focus, optimize your results.**
 
-Tack es una aplicación de escritorio diseñada para gestionar flujos de trabajo profundo (Deep Focus) y salud biomecánica. Desarrollada en Electron, se enfoca en una estética minimalista y un control preciso del tiempo sin distracciones.
+Tack is an activity-driven productivity tracker developed by **HabitOS**. It provides a high-end interface to monitor your tasks in real-time, helping you eliminate wasted time and boost performance through structured sessions and biomechanical awareness.
 
-🛠️ Características Principales
-Deep Focus Engine: Cronómetro de alta precisión con indicadores visuales de estado de flujo.
+---
 
-Bio-Sync Alerts: Sistema de alertas inteligentes para estiramiento (cada 50 min) y recordatorios de hidratación.
+## ✨ Key Features
 
-Gestión de Tareas: Creación y selección de tareas con persistencia de datos local.
+* **Activity Control:** High-precision tracking for your work sessions with a clean, distraction-free interface.
+* **Biomechanical Awareness:** Built-in alerts for stretching and posture changes (Seated/Standing) to keep your body healthy while you work.
+* **Deep Focus Mode:** One-click fullscreen interface to eliminate desktop distractions and stay in the zone.
+* **Smart Progress Bars:** Real-time visual feedback on your daily goals and hydration levels.
+* **Local Persistence:** Your data stays with you. All activities are saved locally in a JSON database for maximum privacy.
+* **Zero-Setup Portable:** No installation required. Just download, run, and start optimizing your time.
 
-Focus Mode: Interfaz inmersiva en pantalla completa para eliminar distracciones del sistema operativo.
+---
 
-Persistencia Local: Almacenamiento automático en tack_db.json dentro del directorio del programa.
+## 🎨 Aesthetics & Interface
 
-🎨 Estética (High-End Design)
-La interfaz utiliza una paleta Deep Dark (#050505) con tipografía Inter y paneles de bajo contraste para reducir la fatiga visual durante largas jornadas de programación.
+Tack is built with a **High-End Dark Aesthetic** designed to minimize eye strain and maximize concentration during long working sessions.
 
-🚀 Instalación y Uso
-Clonar el repositorio:
-git clone https://github.com/tu-usuario/tack.git
-cd tack
+* **Deep Dark Palette:** A sophisticated background (`#050505`) with low-contrast panels for a premium feel.
+* **Elegant Typography:** Utilizing the **Inter** typeface with refined weights and high-precision tabular numbers.
+* **Minimalist Dashboard:** Clean lines and hidden clutter to ensure your current task remains the absolute center of attention.
+* **Bio-Sync Animations:** Subtle pulsing effects for alerts that communicate status without being intrusive or stressful.
 
-Instalar dependencias:
-npm install
+---
 
-Iniciar la aplicación:
-npm start
+## 🚀 Installation & Usage
 
-📂 Estructura del Proyecto
-main.js: Control del proceso principal de Electron y manejo del sistema de archivos.
+Tack is available as a **portable application** (no installation required) and as an **open-source project** for developers.
 
-index.html: Estructura de la interfaz de usuario.
+### 📥 For Users (Ready to Run)
+1. **Download** the latest version for your operating system from the [Releases](tu-enlace-a-releases) section.
+   * **Windows:** Download `Tack-Portable.exe`.
+   * **Linux:** Download `Tack.AppImage`.
+2. **Run:** Move the file to its own folder (to keep your `tack_db.json` organized) and double-click to start.
+3. **Enjoy:** Start tracking your activities and improving your productivity immediately.
 
-style.css: Motor de diseño y animaciones Bio-Sync.
+### 💻 For Developers (Source Code)
+If you want to explore the code or build it yourself:
 
-render.js: Lógica del cronómetro, gestión de estados y biometría.
+1. **Clone the repository:**
+   git clone https://github.com/tu-usuario/tack.git
+   cd tack
 
-tack_db.json: Base de datos local (generada automáticamente).
+2. **Install dependencies:**
+   npm install
 
-🛡️ Notas de Desarrollo
-Este proyecto utiliza un archivo JSON local para la persistencia. Asegúrate de que tack_db.json esté incluido en tu .gitignore para evitar subir datos personales o registros de sesión al repositorio público.
+3. **Run in development mode:**
+   npm start
 
-Desarrollado con enfoque en la ergonomía y la productividad orgánica.
+4. **Build your own executable:**
+   npm run dist:win  # For Windows
+   npm run dist:linux # For Linux
+
+---
+
+## 👥 Credits & Legal
+
+Tack is a product of the **HabitOS** ecosystem, focused on building tools for a more conscious and productive digital life.
+
+* **Concept & Vision:** HabitOS
+* **Lead Developer:** hernanlabs
+* **Design Philosophy:** High-End Minimalist & Biomechanical Ergonomics
+
+### ⚖️ License
+This project is licensed under the **ISC License**. 
+
+This means you are free to use, copy, modify, and distribute this software for any purpose, provided that the original copyright notice and this permission notice appear in all copies. 
+
+---
+*Developed with focus and health in mind. Join the HabitOS community.*
