@@ -2,241 +2,117 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Tack.log | High-Performance Auditor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tack</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-dark: #050505; --bg-panel: #0d0d0d; --bg-card: #121212;
-            --text-main: #e0e0e0; --text-dim: #333; --accent: #2d6a4f;
-            --info: #4a9eff; --break-blue: #1e3a5f; --water: #0077b6;
-        }
-
-        * { box-sizing: border-box; -webkit-user-select: none; margin: 0; padding: 0; }
-        body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        
-        .app-layout { display: grid; grid-template-columns: 280px 1fr 20px; gap: 20px; width: 98vw; height: 96vh; }
-        .panel { background: var(--bg-panel); border-radius: 28px; padding: 25px; display: flex; flex-direction: column; border: 1px solid #1a1a1a; }
-        
-        /* BOTONES NAVEGACIÓN */
-        .btn-stats-nav { background: #1a1a1a; color: var(--info); border: 1px solid #1e3a5f; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 0.6rem; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; width: 100%; margin-bottom: 10px; }
-
-        /* FOCO Y ALERTAS */
-        .focus-ring-container { padding: 30px; border-radius: 45px; transition: 2s ease-in-out; border: 1px solid transparent; }
-        @keyframes focus-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(45, 106, 79, 0); border-color: transparent; }
-            50% { box-shadow: 0 0 60px rgba(45, 106, 79, 0.15); border-color: rgba(45, 106, 79, 0.3); }
-        }
-        .deep-focus-active { animation: focus-glow 8s infinite ease-in-out; }
-
-        @keyframes soft-pulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(74, 158, 255, 0.1); }
-            50% { transform: scale(1.03); box-shadow: 0 0 20px rgba(74, 158, 255, 0.4); border-color: var(--info); }
-        }
-        .stretch-pre-alert { animation: soft-pulse 1s infinite ease-in-out; color: var(--info) !important; }
-
-        @keyframes critical-ripple {
-            0% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0.6); }
-            70% { box-shadow: 0 0 0 20px rgba(74, 158, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0); }
-        }
-        .stretch-critical { animation: critical-ripple 1s infinite; background: var(--break-blue) !important; color: white !important; }
-
-        /* CARD PRINCIPAL */
-        .tack-card { background: var(--bg-card); border-radius: 40px; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center; border: 1px solid #1a1a1a; position: relative; }
-        .timer { font-size: 10rem; font-weight: 100; letter-spacing: -10px; font-variant-numeric: tabular-nums; line-height: 1; }
-        .mili { font-size: 2.5rem; color: #1a1a1a; margin-left: 10px; }
-        .real-time-clock { font-size: 0.75rem; letter-spacing: 5px; color: #222; margin-bottom: 20px; font-weight: 800; }
-
-        /* MÉTRICAS Y TIMELINE */
-        .session-metrics { border-right: 1px solid #1a1a1a; padding-right: 40px; min-width: 160px; }
-        .metric-item small { display: block; letter-spacing: 2px; color: #444; font-size: 0.5rem; font-weight: 800; }
-        .metric-item h4 { font-weight: 100; font-size: 1.8rem; margin: 0; color: var(--text-main); }
-        .session-timeline { border-top: 1px solid #1a1a1a; margin-top: 20px; padding-top: 15px; display: flex; flex-direction: column-reverse; gap: 6px; }
-        .log-entry { font-size: 0.45rem; color: #252525; letter-spacing: 1px; font-weight: 800; text-transform: uppercase; }
-        .log-entry.highlight { color: var(--info); }
-
-        /* MONITORES LATERALES */
-        .side-monitors { display: flex; flex-direction: column; gap: 5px; height: 100%; }
-        .monitor-bar { flex-grow: 1; background: #0a0a0a; border-radius: 4px; position: relative; overflow: hidden; display: flex; flex-direction: column-reverse; }
-        .fill-water { background: linear-gradient(to top, #0077b6, #4a9eff); transition: 0.5s; width: 100%; height: 0; }
-        .fill-load { background: linear-gradient(to top, var(--accent), #800f2f); transition: 1s; width: 100%; height: 0; }
-        .icon-water { cursor: pointer; font-size: 0.7rem; margin-top: 5px; opacity: 0.3; transition: 0.3s; text-align: center; }
-        .icon-water:hover { opacity: 1; transform: scale(1.2); }
-
-        /* BOTONES ACCIÓN */
-        .btn-tack { padding: 12px 24px; border-radius: 12px; border: none; font-weight: 800; font-size: 0.6rem; letter-spacing: 1.5px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .btn-start { background: #1b4332; color: #74c69d; }
-        .btn-pause { background: #432818; color: #d4a373; }
-        .btn-stop { background: #2a0a5e; color: #bdb2ff; }
-        .btn-tack:disabled { opacity: 0.05; }
-
-        .tarea-item { background: #0d0d0d; padding: 12px; border-radius: 14px; margin-bottom: 10px; cursor: pointer; border-left: 3px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center; }
-        .tarea-item.active { background: #151515; border-left-color: var(--accent); border-left-width: 8px; }
-
-        .break-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 40px; }
-    </style>
+    
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <div class="app-layout">
         <aside class="panel">
-            <small style="letter-spacing:5px; color:#1a1a1a; font-weight:800; text-align:center; margin-bottom:30px">TACK.LOG</small>
-            <button class="btn-stats-nav" onclick="toggleView('stats')">ANÁLISIS DE DATOS</button>
-            <button class="btn-tack mb-3 w-100" onclick="abrirModal()" style="background:#111; color:#444; border:1px solid #1a1a1a">+ NUEVA SESIÓN</button>
-            <div id="listaTareas" style="overflow-y: auto; flex-grow: 1;"></div>
+            <small class="brand-label">TACK</small>
+            
+            <button class="btn-new-task" onclick="abrirModal()">
+                + NUEVA TAREA
+            </button>
+            
+            <div id="listaTareas" class="tareas-list-container">
+                </div>
+
+            <button class="btn-focus-mode" onclick="toggleFullScreen()">
+                FOCUS MODE
+            </button>
         </aside>
 
-        <main style="display: flex; flex-direction: column; height: 100%;">
-            <div id="viewTimer" style="height:100%; display:flex; flex-direction:column; position:relative;">
-                <div id="breakOverlay" class="break-overlay text-center">
-                    <div>
-                        <div id="breakIcon" style="font-size:4rem; margin-bottom:10px">🍱</div>
-                        <h2 id="breakTimer" style="font-size:8rem; font-weight:100; color:var(--info); margin:0;">00:00</h2>
-                        <button class="btn-tack btn-pause mt-4" onclick="terminarBreak()">REANUDAR</button>
+        <main class="main-content">
+            <div id="viewTimer" class="timer-wrapper">
+                
+                <div id="breakOverlay" class="break-overlay">
+                    <div class="text-center">
+                        <div id="breakIcon" style="font-size: 3rem;">🍱</div>
+                        <h2 id="breakTimer" style="font-size: 5rem; font-weight: 100; color: var(--info);">00:00</h2>
+                        <button class="btn-tack btn-pause mt-4" onclick="terminarBreak()">
+                            REANUDAR FLUJO
+                        </button>
                     </div>
                 </div>
 
                 <div class="tack-card">
-                    <button onclick="toggleFullScreen()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#1a1a1a; font-size:0.5rem; letter-spacing:2px; cursor:pointer">FULLSCREEN</button>
-                    
                     <div id="focusRing" class="focus-ring-container">
                         <div class="d-flex align-items-center justify-content-center gap-5">
+                            
                             <div class="session-metrics text-end">
-                                <div class="metric-item"><small>BREAKS</small><h4 id="countBreaks">0</h4></div>
-                                <div class="metric-item mt-3"><small>STRETCH</small><h4 id="countStretch">0</h4></div>
-                                <div class="session-timeline" id="sessionLog"></div>
+                                <div class="metric-item">
+                                    <small style="letter-spacing: 2px; color: #1a1a1a; font-size: 0.5rem; font-weight: 800;">BREAKS</small>
+                                    <h4 id="countBreaks" style="font-weight: 100;">0</h4>
+                                </div>
+                                <div class="metric-item mt-3">
+                                    <small style="letter-spacing: 2px; color: #1a1a1a; font-size: 0.5rem; font-weight: 800;">STRETCH</small>
+                                    <h4 id="countStretch" style="font-weight: 100;">0</h4>
+                                </div>
                             </div>
 
                             <div class="timer-core">
                                 <div class="real-time-clock" id="realClock">00:00:00</div>
-                                <small id="taskLabel" style="color:#222; font-weight:800; font-size:0.65rem; letter-spacing:4px">STANDBY</small>
-                                <div class="timer" id="display">00:00:00<span class="mili">00</span></div>
+                                <small id="taskLabel" class="current-task-name">STANDBY</small>
+                                <div class="timer" id="display">
+                                    00:00:00<span class="mili">00</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="d-flex gap-3 justify-content-center mt-4">
-                        <button id="startBtn" class="btn-tack btn-start" onclick="controlTimer('start')" disabled>START</button>
-                        <button id="pauseBtn" class="btn-tack btn-pause" onclick="controlTimer('pause')" disabled>PAUSE</button>
-                        <button id="stopBtn" class="btn-tack btn-stop" onclick="controlTimer('stop')" disabled>STOP</button>
-                    </div>
+                    <div class="controls-wrapper mt-5">
+                        <div class="d-flex gap-3 justify-content-center">
+                            <button id="startBtn" class="btn-tack btn-start" onclick="controlTimer('start')" disabled>START</button>
+                            <button id="pauseBtn" class="btn-tack btn-pause" onclick="controlTimer('pause')" disabled>PAUSE</button>
+                            <button id="stopBtn" class="btn-tack btn-stop" onclick="controlTimer('stop')" disabled>STOP</button>
+                        </div>
 
-                    <div class="d-flex gap-2 justify-content-center mt-3">
-                        <button class="btn-tack" style="background:#0a0a0a; color:#333" onclick="iniciarBreak('ALMUERZO')">LUNCH</button>
-                        <button id="btnStretch" class="btn-tack" style="background:#0a0a0a; color:#333" onclick="iniciarBreak('STRETCH')">STRETCH</button>
-                        <button class="btn-tack" style="background:#0a0a0a; color:#333" onclick="iniciarBreak('BAÑO')">BAÑO</button>
+                        <div class="d-flex gap-2 justify-content-center mt-3">
+                            <button class="btn-quick-action" onclick="iniciarBreak('ALMUERZO')">LUNCH</button>
+                            <button id="btnStretch" class="btn-quick-action" onclick="iniciarBreak('STRETCH')">STRETCH</button>
+                            <button class="btn-quick-action" onclick="iniciarBreak('BAÑO')">BAÑO</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
 
         <div class="side-monitors">
-            <div class="monitor-bar"><div id="waterFill" class="fill-water"></div></div>
-            <div class="icon-water" onclick="addWater()">💧</div>
-            <div class="monitor-bar" style="height: 150px; flex-grow: 0;"><div id="loadFill" class="fill-load"></div></div>
-        </div>
-    </div>
-
-    <div id="modalTarea" class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:3000; align-items:center; justify-content:center;">
-        <div style="background:#111; padding:40px; border-radius:30px; border:1px solid #222; width:350px">
-            <input type="text" id="mNombre" placeholder="NOMBRE TAREA" style="background:none; border:none; border-bottom:1px solid #222; color:white; width:100%; margin-bottom:20px; outline:none; font-size:0.8rem">
-            <select id="mPostura" style="background:#0a0a0a; border:1px solid #222; color:#555; width:100%; padding:10px; border-radius:10px; margin-bottom:10px"><option value="sentado">SENTADO</option><option value="pie">DE PIE</option></select>
-            <div class="d-flex gap-2 mt-4">
-                <button class="btn btn-dark w-100" onclick="cerrarModal()">CANCEL</button>
-                <button class="btn btn-success w-100" onclick="procesarTarea()">SAVE</button>
+            <div class="monitor-bar">
+                <div id="waterFill" class="fill-water"></div>
+            </div>
+            <div class="icon-water" onclick="addWater()" title="Registrar Hidratación">💧</div>
+            
+            <div class="monitor-bar">
+                <div id="loadFill" class="fill-load"></div>
             </div>
         </div>
     </div>
 
-    <script>
-        let db = JSON.parse(localStorage.getItem('tack_v2')) || { tareas: [] };
-        let currentId = null, acum = 0, inicio = null, timerInt = null, breakInt = null;
-        let cBreaks = 0, cStretch = 0, uResetStretch = -1, vasos = 0;
-
-        function save() { localStorage.setItem('tack_v2', JSON.stringify(db)); renderUI(); }
-
-        function registrarEvento(msg, h = false) {
-            const log = document.getElementById('sessionLog');
-            const div = document.createElement('div');
-            div.className = `log-entry ${h ? 'highlight' : ''}`;
-            div.innerText = `${new Date().toLocaleTimeString('es-AR', {hour:'2-digit',minute:'2-digit'})} - ${msg}`;
-            log.appendChild(div);
-            if(log.children.length > 5) log.removeChild(log.firstChild);
-        }
-
-        function actualizarDisplay(ms) {
-            let s = Math.floor(ms/1000), m = Math.floor(s/60), h = Math.floor(m/60);
-            document.getElementById('display').innerHTML = `${h.toString().padStart(2,'0')}:${(m%60).toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}<span class="mili">${Math.floor((ms%1000)/10).toString().padStart(2,'0')}</span>`;
+    <div id="modalTarea" class="modal-overlay-custom">
+        <div class="modal-card-dark">
+            <h6 class="text-center mb-4" style="letter-spacing: 3px; font-size: 0.6rem; color: #444;">NUEVA TAREA</h6>
             
-            // LÓGICA DE CARGA Y FOCO
-            document.getElementById('loadFill').style.height = `${Math.min((ms/(8*3600000))*100, 100)}%`;
-            const ring = document.getElementById('focusRing');
-            if (m >= 25) ring.classList.add('deep-focus-active'); else ring.classList.remove('deep-focus-active');
-
-            // LÓGICA STRETCH (Ciclo 50m)
-            const t = db.tareas.find(x => x.id === currentId);
-            const btn = document.getElementById('btnStretch');
-            if(t && t.postura === 'sentado') {
-                let bloque = Math.floor(m/50);
-                if(bloque > uResetStretch) {
-                    let segBloque = s % 3000;
-                    if(m > 0 && m % 50 === 0) btn.className = "btn-tack stretch-critical";
-                    else if(segBloque >= 2990) btn.className = "btn-tack stretch-pre-alert";
-                    else if(m % 50 >= 40) btn.className = "btn-tack"; // Warning visual opcional
-                }
-            }
-        }
-
-        function iniciarBreak(tipo) {
-            if(timerInt) controlTimer('pause');
-            registrarEvento(tipo, true);
-            if(tipo === 'STRETCH') {
-                cStretch++; uResetStretch = Math.floor((acum/1000/60)/50);
-                document.getElementById('btnStretch').className = "btn-tack";
-            } else { cBreaks++; }
+            <input type="text" id="mNombre" placeholder="NOMBRE DE LA TAREA" class="modal-input" autocomplete="off">
             
-            document.getElementById('countBreaks').innerText = cBreaks;
-            document.getElementById('countStretch').innerText = cStretch;
-            document.getElementById('breakOverlay').style.display = 'flex';
-            document.getElementById('breakIcon').innerText = {'ALMUERZO':'🍱','STRETCH':'🧘','BAÑO':'🧻'}[tipo];
+            <select id="mPostura" class="modal-select">
+                <option value="sentado">POSTURA: SENTADO</option>
+                <option value="pie">POSTURA: DE PIE</option>
+            </select>
             
-            let bInic = Date.now();
-            breakInt = setInterval(() => {
-                let ms = Date.now() - bInic;
-                let s = Math.floor(ms/1000), m = Math.floor(s/60);
-                document.getElementById('breakTimer').innerText = `${m.toString().padStart(2,'0')}:${(s%60).toString().padStart(2,'0')}`;
-            }, 1000);
-        }
+            <div class="d-flex gap-2 mt-4">
+                <button class="btn-tack w-100" style="background: #151515; color: #444;" onclick="cerrarModal()">CANCELAR</button>
+                <button class="btn-tack btn-start w-100" onclick="procesarTarea()">GUARDAR</button>
+            </div>
+        </div>
+    </div>
 
-        function terminarBreak() { clearInterval(breakInt); document.getElementById('breakOverlay').style.display = 'none'; }
-
-        function addWater() { if(vasos < 8) { vasos++; document.getElementById('waterFill').style.height = `${(vasos/8)*100}%`; registrarEvento("AGUA +1", true); } }
-
-        function controlTimer(tipo) {
-            const s = document.getElementById('startBtn'), p = document.getElementById('pauseBtn'), t = document.getElementById('stopBtn');
-            if(tipo==='start') {
-                inicio = Date.now();
-                timerInt = setInterval(() => actualizarDisplay(acum + (Date.now() - inicio)), 10);
-                s.disabled = true; p.disabled = false; t.disabled = false;
-            } else if(tipo==='pause') {
-                acum += (Date.now() - inicio); clearInterval(timerInt); timerInt = null;
-                s.disabled = false; p.disabled = true;
-            } else if(tipo==='stop') {
-                clearInterval(timerInt); timerInt = null; acum = 0;
-                actualizarDisplay(0); s.disabled = false; p.disabled = true; t.disabled = true;
-            }
-        }
-
-        function seleccionar(id) { currentId = id; const t = db.tareas.find(x => x.id === id); document.getElementById('taskLabel').innerText = t.n.toUpperCase(); document.getElementById('startBtn').disabled = false; renderUI(); }
-        function abrirModal() { document.getElementById('modalTarea').style.display = 'flex'; }
-        function cerrarModal() { document.getElementById('modalTarea').style.display = 'none'; }
-        function procesarTarea() { const n = document.getElementById('mNombre').value, p = document.getElementById('mPostura').value; if(n) { db.tareas.push({id:Date.now(), n, postura:p}); save(); cerrarModal(); } }
-        function renderUI() { document.getElementById('listaTareas').innerHTML = db.tareas.map(t => `<div class="tarea-item ${currentId===t.id?'active':''}" onclick="seleccionar(${t.id})"><span>${t.n}</span><small style="font-size:0.5rem; color:#333">${t.postura}</small></div>`).join(''); }
-        function toggleFullScreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
-
-        setInterval(() => document.getElementById('realClock').innerText = new Date().toLocaleTimeString('es-AR', {hour12:false}), 1000);
-        document.addEventListener('DOMContentLoaded', () => { renderUI(); registrarEvento("SISTEMA READY"); });
-    </script>
+    <script src="./render.js"></script>
 </body>
 </html>

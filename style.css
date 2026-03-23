@@ -1,4 +1,4 @@
-/* --- VARIABLES DE ALTA GAMA --- */
+/* --- VARIABLES TACK (Paleta Deep Dark) --- */
 :root {
     --bg-dark: #050505; 
     --bg-panel: #0d0d0d; 
@@ -8,10 +8,9 @@
     --accent: #2d6a4f;      /* Verde Esmeralda Deep */
     --info: #4a9eff;        /* Azul Eléctrico */
     --break-blue: #1e3a5f;  /* Azul Profundo */
-    --water: #0077b6;       /* Azul Oceánico */
 }
 
-/* --- RESET Y ESTRUCTURA BASE --- */
+/* --- RESET Y ESTRUCTURA --- */
 * { 
     box-sizing: border-box; 
     -webkit-user-select: none; 
@@ -32,13 +31,13 @@ body {
 
 .app-layout { 
     display: grid; 
-    grid-template-columns: 280px 1fr 20px; 
+    grid-template-columns: 280px 1fr 25px; 
     gap: 20px; 
     width: 98vw; 
     height: 96vh; 
 }
 
-/* --- PANELES LATERALES --- */
+/* --- PANEL LATERAL (TAREAS) --- */
 .panel { 
     background: var(--bg-panel); 
     border-radius: 28px; 
@@ -48,46 +47,86 @@ body {
     border: 1px solid #1a1a1a; 
 }
 
-/* --- ANIMACIÓN: MODO DEEP FOCUS (25 MIN) --- */
-.focus-ring-container { 
-    padding: 30px; 
-    border-radius: 45px; 
-    transition: 2s ease-in-out; 
-    border: 1px solid transparent; 
+.brand-label {
+    letter-spacing: 5px; 
+    color: #1a1a1a; 
+    font-weight: 800; 
+    text-align: center; 
+    margin-bottom: 30px;
+    display: block;
+    font-size: 0.8rem;
 }
 
-@keyframes focus-glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(45, 106, 79, 0); border-color: transparent; }
-    50% { box-shadow: 0 0 60px rgba(45, 106, 79, 0.15); border-color: rgba(45, 106, 79, 0.3); }
+.btn-new-task {
+    background: #111;
+    border: 1px solid #222;
+    color: #555;
+    padding: 15px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    transition: 0.3s;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
-.deep-focus-active { 
-    animation: focus-glow 8s infinite ease-in-out; 
+.btn-new-task:hover {
+    border-color: var(--accent);
+    color: var(--text-main);
 }
 
-/* --- ANIMACIONES: STRETCH ALERT --- */
-@keyframes soft-pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(74, 158, 255, 0.1); }
-    50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(74, 158, 255, 0.4); border-color: var(--info); }
+.tareas-list-container { 
+    flex-grow: 1; 
+    overflow-y: auto; 
+    margin-bottom: 20px;
 }
 
-@keyframes critical-ripple {
-    0% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0.6); }
-    70% { box-shadow: 0 0 0 25px rgba(74, 158, 255, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0); }
+/* Botón Focus Mode al final del panel lateral */
+.btn-focus-mode {
+    background: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    color: #333;
+    padding: 12px;
+    border-radius: 16px;
+    font-weight: 800;
+    font-size: 0.6rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-top: auto; /* Empuja el botón al fondo */
+    transition: 0.3s;
 }
 
-.stretch-pre-alert { animation: soft-pulse 1.2s infinite ease-in-out; color: var(--info) !important; }
-.stretch-critical { animation: critical-ripple 1s infinite; background: var(--break-blue) !important; color: white !important; }
+.btn-focus-mode:hover {
+    background: #111;
+    color: var(--accent);
+    border-color: var(--accent);
+}
 
-/* --- CORE: TACK CARD Y TIMER --- */
+/* --- CONTENIDO CENTRAL (TACK CARD) --- */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.timer-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+}
+
 .tack-card { 
     background: var(--bg-card); 
     border-radius: 40px; 
-    flex-grow: 1; 
+    flex-grow: 1; /* Ocupa todo el espacio disponible */
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
+    align-items: center;
     text-align: center; 
     border: 1px solid #1a1a1a; 
     position: relative; 
@@ -99,7 +138,6 @@ body {
     letter-spacing: -10px; 
     font-variant-numeric: tabular-nums; 
     line-height: 1; 
-    color: var(--text-main);
 }
 
 .mili { font-size: 2.5rem; color: #1a1a1a; margin-left: 10px; }
@@ -112,36 +150,51 @@ body {
     font-weight: 800; 
 }
 
-/* --- MÉTRICAS Y TIMELINE --- */
-.session-metrics { border-right: 1px solid #1a1a1a; padding-right: 40px; min-width: 160px; }
-.metric-item small { display: block; letter-spacing: 2px; color: #444; font-size: 0.5rem; font-weight: 800; text-transform: uppercase; }
-.metric-item h4 { font-weight: 100; font-size: 1.8rem; margin: 0; color: var(--text-main); font-variant-numeric: tabular-nums; }
-
-.session-timeline { 
-    border-top: 1px solid #1a1a1a; 
-    margin-top: 20px; 
-    padding-top: 15px; 
-    display: flex; 
-    flex-direction: column-reverse; 
-    gap: 6px; 
-    max-height: 120px;
-    overflow: hidden;
+.current-task-name {
+    color: #333; 
+    font-weight: 800; 
+    letter-spacing: 4px;
+    text-transform: uppercase; 
+    font-size: 0.65rem;
 }
 
-.log-entry { font-size: 0.45rem; color: var(--text-dim); letter-spacing: 1px; font-weight: 800; text-transform: uppercase; }
-.log-entry.highlight { color: var(--info); }
+/* --- ANIMACIONES Y EFECTOS --- */
+.focus-ring-container { 
+    width: 100%;
+    padding: 30px; 
+    border-radius: 45px; 
+    transition: 2s ease-in-out; 
+    border: 1px solid transparent; 
+}
 
-/* --- MONITORES LATERALES (AGUA Y CARGA) --- */
-.side-monitors { display: flex; flex-direction: column; gap: 8px; height: 100%; padding-bottom: 10px; }
-.monitor-bar { flex-grow: 1; background: #0a0a0a; border-radius: 4px; position: relative; overflow: hidden; display: flex; flex-direction: column-reverse; width: 8px; }
+.deep-focus-active { 
+    border-color: rgba(45, 106, 79, 0.3); 
+    box-shadow: 0 0 60px rgba(45, 106, 79, 0.1); 
+}
 
-.fill-water { background: linear-gradient(to top, #0077b6, #4a9eff); transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); height: 0; width: 100%; }
-.fill-load { background: linear-gradient(to top, var(--accent), #800f2f); transition: 1.5s ease-in-out; height: 0; width: 100%; }
+@keyframes soft-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.03); opacity: 0.8; }
+}
 
-.icon-water { cursor: pointer; font-size: 0.75rem; margin-top: 5px; opacity: 0.2; transition: 0.3s; text-align: center; }
+.stretch-pre-alert { animation: soft-pulse 1.2s infinite; color: var(--info) !important; }
+.stretch-critical { 
+    animation: soft-pulse 0.5s infinite alternate; 
+    background: var(--break-blue) !important; 
+    color: white !important; 
+}
+
+/* --- MONITORES LATERALES (BIOMETRÍA) --- */
+.side-monitors { display: flex; flex-direction: column; gap: 8px; height: 100%; }
+.monitor-bar { flex-grow: 1; background: #0a0a0a; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column-reverse; width: 10px; }
+
+.fill-water { background: linear-gradient(to top, #0077b6, #4a9eff); transition: 0.6s; height: 0; width: 100%; }
+.fill-load { background: linear-gradient(to top, var(--accent), #800f2f); transition: 1.5s; height: 0; width: 100%; }
+
+.icon-water { cursor: pointer; font-size: 0.9rem; margin-top: 5px; opacity: 0.2; transition: 0.3s; text-align: center; }
 .icon-water:hover { opacity: 1; transform: scale(1.3); }
 
-/* --- BOTONES DE ACCIÓN --- */
+/* --- BOTONES DE CONTROL --- */
 .btn-tack { 
     padding: 12px 24px; 
     border-radius: 12px; 
@@ -157,8 +210,22 @@ body {
 .btn-start { background: #1b4332; color: #74c69d; }
 .btn-pause { background: #432818; color: #d4a373; }
 .btn-stop { background: #2a0a5e; color: #bdb2ff; }
+
+.btn-quick-action { 
+    background: #0a0a0a; 
+    color: #333; 
+    border: none; 
+    padding: 10px 15px; 
+    border-radius: 10px; 
+    font-weight: 800; 
+    font-size: 0.6rem; 
+    cursor: pointer; 
+    text-transform: uppercase;
+}
+
 .btn-tack:disabled { opacity: 0.05; cursor: default; }
 
+/* --- TAREAS ITEMS --- */
 .tarea-item { 
     background: #0d0d0d; 
     padding: 12px; 
@@ -174,7 +241,7 @@ body {
 
 .tarea-item.active { background: #151515; border-left-color: var(--accent); border-left-width: 8px; }
 
-/* --- OVERLAYS Y MODALES --- */
+/* --- OVERLAYS Y MODAL --- */
 .break-overlay { 
     position: absolute; 
     top: 0; left: 0; 
@@ -187,5 +254,42 @@ body {
     border-radius: 40px; 
 }
 
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+.modal-overlay-custom { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.95); 
+    z-index: 3000; 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.modal-card-dark { 
+    background: #0d0d0d; 
+    padding: 40px; 
+    border-radius: 32px; 
+    border: 1px solid #1a1a1a; 
+    width: 380px; 
+}
+
+.modal-input { 
+    background: #050505; 
+    border: 1px solid #1a1a1a; 
+    border-radius: 12px;
+    color: white; 
+    width: 100%; 
+    margin-bottom: 20px; 
+    padding: 15px;
+    outline: none;
+}
+
+.modal-select { 
+    background: #050505; 
+    border: 1px solid #1a1a1a; 
+    color: #555; 
+    width: 100%; 
+    padding: 12px; 
+    border-radius: 12px;
+    font-weight: 800;
+}

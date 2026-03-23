@@ -1,47 +1,65 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let mainWindow;
 
+// Definimos la ruta de la base de datos en la misma carpeta del programa
+const DB_PATH = path.join(app.getAppPath(), 'tack_db.json');
+
 function createWindow() {
-    // Configuramos la ventana con un look moderno
     mainWindow = new BrowserWindow({
         width: 1280,
         height: 800,
         minWidth: 1000,
         minHeight: 700,
-        backgroundColor: '#0d0d0d', // Evita el flash blanco al cargar
-        titleBarStyle: 'hiddenInset', // Oculta barra de título en macOS/algunos Linux
-        autoHideMenuBar: true, // Oculta la barra de menú clásica de Ubuntu (Alt para ver)
+        backgroundColor: '#050505', // Fondo oscuro nativo
+        title: 'Tack',
+        titleBarStyle: 'hiddenInset',
+        autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false, // Permite usar require('electron') en el renderer.js
+            contextIsolation: false,
+            // Enviamos la ruta de la DB al render para que sepa dónde guardar
+            additionalArguments: [`--db-path=${DB_PATH}`]
         }
     });
 
     mainWindow.loadFile('index.html');
 
-    // Opcional: Abrir herramientas de desarrollo al iniciar
-    // mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools(); // Activar para debugging
 }
 
-// --- LÓGICA DE COMUNICACIÓN (IPC) ---
+// --- COMUNICACIÓN IPC ---
 
-// Manejo del Modo Focus (Pantalla completa)
+// Manejo de Pantalla Completa
 ipcMain.on('toggle-fullscreen', () => {
-    const isFullScreen = mainWindow.isFullScreen();
-    mainWindow.setFullScreen(!isFullScreen);
+    if (mainWindow) {
+        const isFullScreen = mainWindow.isFullScreen();
+        mainWindow.setFullScreen(!isFullScreen);
+    }
 });
 
-// Ciclo de vida de la App
-app.whenReady().then(() => {
-    createWindow();
-
-    app.on('activate', () => {
-        if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    });
+// Lógica de Persistencia Local (Lectura/Escritura de archivos)
+ipcMain.handle('read-db', () => {
+    if (fs.existsSync(DB_PATH)) {
+        return JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+    }
+    return { tareas: [], registros: [] }; // DB Inicial si no existe
 });
+
+ipcMain.handle('save-db', (event, data) => {
+    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+    return true;
+});
+
+// Ciclo de vida
+app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });

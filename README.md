@@ -1,64 +1,45 @@
-# 🛰️ Tack.log | High-Performance Auditor
+⏱️ Tack
+High-End Productivity Framework for Developers.
 
-**Tack.log** es un entorno de auditoría de tiempo y biometría diseñado específicamente para desarrolladores de alto rendimiento. No es solo un cronómetro; es un asistente de flujo cognitivo que monitorea tu estado de salud, hidratación y profundidad de enfoque en tiempo real.
+Tack es una aplicación de escritorio diseñada para gestionar flujos de trabajo profundo (Deep Focus) y salud biomecánica. Desarrollada en Electron, se enfoca en una estética minimalista y un control preciso del tiempo sin distracciones.
 
-![Status](https://img.shields.io/badge/Status-Active-2d6a4f?style=for-the-badge)
-![Tech](https://img.shields.io/badge/Tech-Vanilla_JS_Modular-4a9eff?style=for-the-badge)
-![Visual](https://img.shields.io/badge/UI-High--End_Dark-0a0a0a?style=for-the-badge)
+🛠️ Características Principales
+Deep Focus Engine: Cronómetro de alta precisión con indicadores visuales de estado de flujo.
 
----
+Bio-Sync Alerts: Sistema de alertas inteligentes para estiramiento (cada 50 min) y recordatorios de hidratación.
 
-## 💎 Filosofía de Diseño
-Construido bajo una estética **Dark Premium**, el sistema utiliza tipografía elegante y líneas minimalistas para reducir la carga visual, permitiendo que el desarrollador se mantenga en el "Estado de Flow" sin distracciones innecesarias.
+Gestión de Tareas: Creación y selección de tareas con persistencia de datos local.
 
-## 🚀 Características Principales
+Focus Mode: Interfaz inmersiva en pantalla completa para eliminar distracciones del sistema operativo.
 
-### 🧠 Monitoreo Cognitivo y Flow
-- **Deep Focus Mode:** Activación automática de resplandor esmeralda tras 25 minutos de trabajo ininterrumpido.
-- **Cognitive Load Meter:** Barra vertical que rastrea el agotamiento diario basado en una meta de 8 horas.
-- **Session Timeline:** Log de auditoría en tiempo real que registra cada hito de la sesión.
+Persistencia Local: Almacenamiento automático en tack_db.json dentro del directorio del programa.
 
-### 🧘 Biometría y Salud (Bio-Sync)
-- **Stretch Alerts:** Sistema de alertas preventivas. El botón de estiramiento late 10 segundos antes de cumplirse el ciclo de 50 minutos.
-- **Hydration Tracker:** Medidor de ingesta de agua integrado para mantener el rendimiento físico.
-- **Posture Aware:** Lógica de alertas diferenciada según la postura de trabajo (Sentado/De Pie).
+🎨 Estética (High-End Design)
+La interfaz utiliza una paleta Deep Dark (#050505) con tipografía Inter y paneles de bajo contraste para reducir la fatiga visual durante largas jornadas de programación.
 
-### 🛠️ Arquitectura Modular
-El proyecto está desacoplado en módulos independientes para máxima escalabilidad:
-- `Timer.js`: Motor de precisión de milisegundos.
-- `UI.js`: Orquestador de animaciones y manipulación del DOM.
-- `Core.js`: Cerebro lógico y manejo de eventos.
-- `Storage.js`: Capa de persistencia de datos.
+🚀 Instalación y Uso
+Clonar el repositorio:
+git clone https://github.com/tu-usuario/tack.git
+cd tack
 
----
+Instalar dependencias:
+npm install
 
-## 📂 Estructura del Proyecto
+Iniciar la aplicación:
+npm start
 
-text
-tack-log/
-├── index.html          # Estructura ósea y contenedores
-├── style.css           # Motor de animaciones y diseño High-End
-└── js/
-    ├── Core.js         # Orquestador principal
-    ├── Timer.js        # Lógica de tiempo (Módulo)
-    ├── UI.js           # Manejo de interfaz (Módulo)
-    └── Storage.js      # Persistencia LocalStorage (Módulo)
+📂 Estructura del Proyecto
+main.js: Control del proceso principal de Electron y manejo del sistema de archivos.
 
-### ⚡ Instalación Rápida
-***Como el proyecto utiliza Módulos de ES6, es necesario correrlo a través de un servidor local (como Live Server de VS Code) para evitar errores de CORS.
+index.html: Estructura de la interfaz de usuario.
 
-- **Clona el repositorio.
+style.css: Motor de diseño y animaciones Bio-Sync.
 
-- **Abre la carpeta en VS Code.
+render.js: Lógica del cronómetro, gestión de estados y biometría.
 
-- **Haz clic derecho en index.html -> Open with Live Server.
+tack_db.json: Base de datos local (generada automáticamente).
 
-###🛠️ Tecnologías
-***Vanilla JavaScript: ES6+ Modules.
+🛡️ Notas de Desarrollo
+Este proyecto utiliza un archivo JSON local para la persistencia. Asegúrate de que tack_db.json esté incluido en tu .gitignore para evitar subir datos personales o registros de sesión al repositorio público.
 
-***CSS3: Custom Properties y Keyframe Animations.
-
-***Bootstrap 5: Grid system para layout responsivo.
-
-***Google Fonts: Inter para legibilidad técnica.
-
+Desarrollado con enfoque en la ergonomía y la productividad orgánica.
