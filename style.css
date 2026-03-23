@@ -1,0 +1,191 @@
+/* --- VARIABLES DE ALTA GAMA --- */
+:root {
+    --bg-dark: #050505; 
+    --bg-panel: #0d0d0d; 
+    --bg-card: #121212;
+    --text-main: #e0e0e0; 
+    --text-dim: #252525; 
+    --accent: #2d6a4f;      /* Verde Esmeralda Deep */
+    --info: #4a9eff;        /* Azul Eléctrico */
+    --break-blue: #1e3a5f;  /* Azul Profundo */
+    --water: #0077b6;       /* Azul Oceánico */
+}
+
+/* --- RESET Y ESTRUCTURA BASE --- */
+* { 
+    box-sizing: border-box; 
+    -webkit-user-select: none; 
+    margin: 0; 
+    padding: 0; 
+}
+
+body { 
+    background: var(--bg-dark); 
+    color: var(--text-main); 
+    font-family: 'Inter', sans-serif; 
+    height: 100vh; 
+    overflow: hidden; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.app-layout { 
+    display: grid; 
+    grid-template-columns: 280px 1fr 20px; 
+    gap: 20px; 
+    width: 98vw; 
+    height: 96vh; 
+}
+
+/* --- PANELES LATERALES --- */
+.panel { 
+    background: var(--bg-panel); 
+    border-radius: 28px; 
+    padding: 25px; 
+    display: flex; 
+    flex-direction: column; 
+    border: 1px solid #1a1a1a; 
+}
+
+/* --- ANIMACIÓN: MODO DEEP FOCUS (25 MIN) --- */
+.focus-ring-container { 
+    padding: 30px; 
+    border-radius: 45px; 
+    transition: 2s ease-in-out; 
+    border: 1px solid transparent; 
+}
+
+@keyframes focus-glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(45, 106, 79, 0); border-color: transparent; }
+    50% { box-shadow: 0 0 60px rgba(45, 106, 79, 0.15); border-color: rgba(45, 106, 79, 0.3); }
+}
+
+.deep-focus-active { 
+    animation: focus-glow 8s infinite ease-in-out; 
+}
+
+/* --- ANIMACIONES: STRETCH ALERT --- */
+@keyframes soft-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(74, 158, 255, 0.1); }
+    50% { transform: scale(1.03); box-shadow: 0 0 25px rgba(74, 158, 255, 0.4); border-color: var(--info); }
+}
+
+@keyframes critical-ripple {
+    0% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0.6); }
+    70% { box-shadow: 0 0 0 25px rgba(74, 158, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(74, 158, 255, 0); }
+}
+
+.stretch-pre-alert { animation: soft-pulse 1.2s infinite ease-in-out; color: var(--info) !important; }
+.stretch-critical { animation: critical-ripple 1s infinite; background: var(--break-blue) !important; color: white !important; }
+
+/* --- CORE: TACK CARD Y TIMER --- */
+.tack-card { 
+    background: var(--bg-card); 
+    border-radius: 40px; 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    text-align: center; 
+    border: 1px solid #1a1a1a; 
+    position: relative; 
+}
+
+.timer { 
+    font-size: 10rem; 
+    font-weight: 100; 
+    letter-spacing: -10px; 
+    font-variant-numeric: tabular-nums; 
+    line-height: 1; 
+    color: var(--text-main);
+}
+
+.mili { font-size: 2.5rem; color: #1a1a1a; margin-left: 10px; }
+
+.real-time-clock { 
+    font-size: 0.75rem; 
+    letter-spacing: 5px; 
+    color: #222; 
+    margin-bottom: 20px; 
+    font-weight: 800; 
+}
+
+/* --- MÉTRICAS Y TIMELINE --- */
+.session-metrics { border-right: 1px solid #1a1a1a; padding-right: 40px; min-width: 160px; }
+.metric-item small { display: block; letter-spacing: 2px; color: #444; font-size: 0.5rem; font-weight: 800; text-transform: uppercase; }
+.metric-item h4 { font-weight: 100; font-size: 1.8rem; margin: 0; color: var(--text-main); font-variant-numeric: tabular-nums; }
+
+.session-timeline { 
+    border-top: 1px solid #1a1a1a; 
+    margin-top: 20px; 
+    padding-top: 15px; 
+    display: flex; 
+    flex-direction: column-reverse; 
+    gap: 6px; 
+    max-height: 120px;
+    overflow: hidden;
+}
+
+.log-entry { font-size: 0.45rem; color: var(--text-dim); letter-spacing: 1px; font-weight: 800; text-transform: uppercase; }
+.log-entry.highlight { color: var(--info); }
+
+/* --- MONITORES LATERALES (AGUA Y CARGA) --- */
+.side-monitors { display: flex; flex-direction: column; gap: 8px; height: 100%; padding-bottom: 10px; }
+.monitor-bar { flex-grow: 1; background: #0a0a0a; border-radius: 4px; position: relative; overflow: hidden; display: flex; flex-direction: column-reverse; width: 8px; }
+
+.fill-water { background: linear-gradient(to top, #0077b6, #4a9eff); transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); height: 0; width: 100%; }
+.fill-load { background: linear-gradient(to top, var(--accent), #800f2f); transition: 1.5s ease-in-out; height: 0; width: 100%; }
+
+.icon-water { cursor: pointer; font-size: 0.75rem; margin-top: 5px; opacity: 0.2; transition: 0.3s; text-align: center; }
+.icon-water:hover { opacity: 1; transform: scale(1.3); }
+
+/* --- BOTONES DE ACCIÓN --- */
+.btn-tack { 
+    padding: 12px 24px; 
+    border-radius: 12px; 
+    border: none; 
+    font-weight: 800; 
+    font-size: 0.6rem; 
+    letter-spacing: 1.5px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    text-transform: uppercase; 
+}
+
+.btn-start { background: #1b4332; color: #74c69d; }
+.btn-pause { background: #432818; color: #d4a373; }
+.btn-stop { background: #2a0a5e; color: #bdb2ff; }
+.btn-tack:disabled { opacity: 0.05; cursor: default; }
+
+.tarea-item { 
+    background: #0d0d0d; 
+    padding: 12px; 
+    border-radius: 14px; 
+    margin-bottom: 10px; 
+    cursor: pointer; 
+    border-left: 3px solid #1a1a1a; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    transition: 0.2s;
+}
+
+.tarea-item.active { background: #151515; border-left-color: var(--accent); border-left-width: 8px; }
+
+/* --- OVERLAYS Y MODALES --- */
+.break-overlay { 
+    position: absolute; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.98); 
+    z-index: 1000; 
+    display: none; 
+    align-items: center; 
+    justify-content: center; 
+    border-radius: 40px; 
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
