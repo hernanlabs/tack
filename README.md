@@ -34,7 +34,7 @@ El proyecto está desacoplado en módulos independientes para máxima escalabili
 
 ## 📂 Estructura del Proyecto
 
-```text
+text
 tack-log/
 ├── index.html          # Estructura ósea y contenedores
 ├── style.css           # Motor de animaciones y diseño High-End
@@ -47,11 +47,11 @@ tack-log/
 ### ⚡ Instalación Rápida
 ***Como el proyecto utiliza Módulos de ES6, es necesario correrlo a través de un servidor local (como Live Server de VS Code) para evitar errores de CORS.
 
-***Clona el repositorio.
+- **Clona el repositorio.
 
-***Abre la carpeta en VS Code.
+- **Abre la carpeta en VS Code.
 
-***Haz clic derecho en index.html -> Open with Live Server.
+- **Haz clic derecho en index.html -> Open with Live Server.
 
 ###🛠️ Tecnologías
 ***Vanilla JavaScript: ES6+ Modules.
