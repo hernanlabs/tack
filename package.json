@@ -7,7 +7,7 @@
   "developer": "Naxubik",
   "license": "ISC",
   "scripts": {
-    "start": "electron .",
+    "start": "ELECTRON_DISABLE_SANDBOX=1 electron .",
     "build:linux": "electron-builder --linux --dir",
     "build:win": "electron-builder --windows --dir",
     "dist:linux": "electron-builder --linux AppImage",

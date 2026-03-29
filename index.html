@@ -5,114 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tack</title>
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;400;600;800&display=swap" rel="stylesheet">
-    
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
 
     <div class="app-layout">
         <aside class="panel">
-            <small class="brand-label">TACK</small>
-            
-            <button class="btn-new-task" onclick="abrirModal()">
-                + NUEVA TAREA
-            </button>
-            
-            <div id="listaTareas" class="tareas-list-container">
-                </div>
+            <small class="brand-label">TACK_SYSTEM</small>
 
-            <button class="btn-focus-mode" onclick="toggleFullScreen()">
-                FOCUS MODE
+            <div class="panel-stage">
+                <div id="panelTrack" class="panel-track" data-index="0">
+                    <div class="panel-page panel-page--menu">
+                        <nav class="main-nav" aria-label="Menú principal">
+                            <button type="button" class="nav-tile" onclick="irASeccionPanel('productividad')">
+                                <span class="nav-tile-label">PRODUCTIVIDAD</span>
+                                <span class="nav-tile-desc">Tareas y cronómetro</span>
+                            </button>
+                            <button type="button" class="nav-tile" onclick="irASeccionPanel('habitos')">
+                                <span class="nav-tile-label">HÁBITOS</span>
+                                <span class="nav-tile-desc">Rutinas y seguimiento</span>
+                            </button>
+                            <button type="button" class="nav-tile" onclick="irASeccionPanel('dashboard')">
+                                <span class="nav-tile-label">DASHBOARD</span>
+                                <span class="nav-tile-desc">Resumen general</span>
+                            </button>
+                        </nav>
+                    </div>
+                    <div class="panel-page panel-page--sub">
+                        <button type="button" class="btn-panel-back" onclick="irASeccionPanel('menu')" aria-label="Volver al menú">← MENÚ</button>
+                        <button class="btn-new-task" onclick="abrirModal()">
+                            + NEW SEQUENCE
+                        </button>
+                        <div id="listaTareas" class="tareas-list-container"></div>
+                    </div>
+                    <div class="panel-page panel-page--sub panel-page--narrow-text">
+                        <button type="button" class="btn-panel-back" onclick="irASeccionPanel('menu')">← MENÚ</button>
+                        <p class="panel-sub-hint">Próximamente: seguimiento de hábitos diarios desde este panel.</p>
+                    </div>
+                    <div class="panel-page panel-page--sub panel-page--narrow-text">
+                        <button type="button" class="btn-panel-back" onclick="irASeccionPanel('menu')">← MENÚ</button>
+                        <p class="panel-sub-hint">Vista de métricas y resumen; se conectará con el resto de módulos.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-focus-mode" onclick="toggleFullScreen()">
+                FOCUS_MODE
             </button>
         </aside>
 
         <main class="main-content">
-            <div id="viewTimer" class="timer-wrapper">
-                
-                <div id="breakOverlay" class="break-overlay">
-                    <div class="text-center">
-                        <div id="breakIcon" style="font-size: 3rem;">🍱</div>
-                        <h2 id="breakTimer" style="font-size: 5rem; font-weight: 100; color: var(--info);">00:00</h2>
-                        <button class="btn-tack btn-pause mt-4" onclick="terminarBreak()">
-                            REANUDAR FLUJO
-                        </button>
+            <div id="mainStage" class="main-stage">
+                <section id="viewWelcome" class="main-view main-view--active" aria-hidden="false">
+                    <div id="menuParticlesHost" class="menu-particles-host">
+                        <canvas id="menuParticles" class="menu-particles-canvas" width="1" height="1" aria-hidden="true"></canvas>
                     </div>
-                </div>
+                </section>
+                <section id="viewProductividad" class="main-view" aria-hidden="true">
+                    <div id="viewTimer" class="timer-wrapper">
+                        <div id="breakOverlay" class="break-overlay">
+                            <div style="text-align: center;">
+                                <div id="breakIcon" style="font-size: 3rem; margin-bottom: 10px;">🍱</div>
+                                <h2 id="breakTimer" style="font-size: 5rem; font-weight: 100; color: #fff;">00:00</h2>
+                                <button class="btn-tack btn-pause" style="margin-top: 30px;" onclick="terminarBreak()">
+                                    RESUME FLOW
+                                </button>
+                            </div>
+                        </div>
 
-                <div class="tack-card">
-                    <div id="focusRing" class="focus-ring-container">
-                        <div class="d-flex align-items-center justify-content-center gap-5">
-                            
-                            <div class="session-metrics text-end">
-                                <div class="metric-item">
-                                    <small style="letter-spacing: 2px; color: #1a1a1a; font-size: 0.5rem; font-weight: 800;">BREAKS</small>
-                                    <h4 id="countBreaks" style="font-weight: 100;">0</h4>
-                                </div>
-                                <div class="metric-item mt-3">
-                                    <small style="letter-spacing: 2px; color: #1a1a1a; font-size: 0.5rem; font-weight: 800;">STRETCH</small>
-                                    <h4 id="countStretch" style="font-weight: 100;">0</h4>
+                        <div class="tack-card">
+                            <div id="prodParticlesHost" class="prod-particles-host">
+                                <canvas id="prodParticles" class="prod-particles-canvas" width="1" height="1" aria-hidden="true"></canvas>
+                            </div>
+                            <div id="focusRing" class="focus-ring-container">
+                                <div style="display: flex; align-items: center; justify-content: center;">
+                                    <div class="timer-core">
+                                        <div class="real-time-clock" id="realClock">00:00:00</div>
+                                        <small id="taskLabel" class="current-task-name">STANDBY_ENGINE</small>
+                                        <p id="goalLine" class="goal-line goal-line--hidden" aria-live="polite"></p>
+                                        <div class="timer" id="display">
+                                            00:00:00<span class="mili">00</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="timer-core">
-                                <div class="real-time-clock" id="realClock">00:00:00</div>
-                                <small id="taskLabel" class="current-task-name">STANDBY</small>
-                                <div class="timer" id="display">
-                                    00:00:00<span class="mili">00</span>
+                            <div class="controls-wrapper" style="margin-top: 40px;">
+                                <div style="display: flex; gap: 15px; justify-content: center;">
+                                    <button id="startBtn" class="btn-tack btn-start" onclick="controlTimer('start')" disabled>START</button>
+                                    <button id="pauseBtn" class="btn-tack btn-pause" onclick="controlTimer('pause')" disabled>PAUSE</button>
+                                    <button id="stopBtn" class="btn-tack btn-stop" onclick="controlTimer('stop')" disabled>STOP</button>
+                                </div>
+
+                                <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+                                    <button class="btn-quick-action" onclick="iniciarBreak('ALMUERZO')">LUNCH</button>
+                                    <button id="btnStretch" class="btn-quick-action" onclick="iniciarBreak('STRETCH')">STRETCH</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="controls-wrapper mt-5">
-                        <div class="d-flex gap-3 justify-content-center">
-                            <button id="startBtn" class="btn-tack btn-start" onclick="controlTimer('start')" disabled>START</button>
-                            <button id="pauseBtn" class="btn-tack btn-pause" onclick="controlTimer('pause')" disabled>PAUSE</button>
-                            <button id="stopBtn" class="btn-tack btn-stop" onclick="controlTimer('stop')" disabled>STOP</button>
-                        </div>
-
-                        <div class="d-flex gap-2 justify-content-center mt-3">
-                            <button class="btn-quick-action" onclick="iniciarBreak('ALMUERZO')">LUNCH</button>
-                            <button id="btnStretch" class="btn-quick-action" onclick="iniciarBreak('STRETCH')">STRETCH</button>
-                            <button class="btn-quick-action" onclick="iniciarBreak('BAÑO')">BAÑO</button>
-                        </div>
+                </section>
+                <section id="viewHabitos" class="main-view" aria-hidden="true">
+                    <div class="placeholder-view tack-card-welcome">
+                        <small class="brand-label">HÁBITOS</small>
+                        <h2 class="welcome-title">Módulo en evolución</h2>
+                        <p class="welcome-hint">Acá irá el seguimiento de hábitos. Volvé al menú o entrá a Productividad cuando quieras.</p>
                     </div>
-                </div>
+                </section>
+                <section id="viewDashboard" class="main-view" aria-hidden="true">
+                    <div class="placeholder-view tack-card-welcome">
+                        <small class="brand-label">DASHBOARD</small>
+                        <h2 class="welcome-title">Resumen global</h2>
+                        <p class="welcome-hint">Esta vista reunirá indicadores de todas las áreas. Por ahora usá Productividad para trabajar.</p>
+                    </div>
+                </section>
             </div>
         </main>
 
-        <div class="side-monitors">
-            <div class="monitor-bar">
-                <div id="waterFill" class="fill-water"></div>
+        <aside class="side-monitors" aria-label="Hidratación y carga de sesión">
+            <div id="hydrationPanel" class="hydration-panel">
+                <span class="hydration-icon" aria-hidden="true">💧</span>
+                <small class="hydration-label">HIDRATACIÓN</small>
+                <div id="hydrateCountdown" class="hydrate-countdown">45:00</div>
+                <div class="hydrate-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="hydrateTrack">
+                    <div id="hydrateProgress" class="hydrate-fill"></div>
+                </div>
+                <p id="hydrateDueLine" class="hydrate-due-line hydrate-due-line--hidden">Tomá un sorbo cuando puedas.</p>
+                <button type="button" class="hydrate-ack-btn" onclick="confirmarHidratacion()">Listo, ya tomé</button>
             </div>
-            <div class="icon-water" onclick="addWater()" title="Registrar Hidratación">💧</div>
-            
-            <div class="monitor-bar">
-                <div id="loadFill" class="fill-load"></div>
+
+            <div id="cognitiveWrap" class="cognitive-wrap">
+                <small class="cognitive-label">SESSION_LOAD</small>
+                <div class="monitor-bar cognitive-bar">
+                    <div id="loadFill" class="fill-load"></div>
+                </div>
             </div>
-        </div>
+        </aside>
     </div>
 
     <div id="modalTarea" class="modal-overlay-custom">
         <div class="modal-card-dark">
-            <h6 class="text-center mb-4" style="letter-spacing: 3px; font-size: 0.6rem; color: #444;">NUEVA TAREA</h6>
+            <div class="modal-header">
+                <small id="modal-seq-label" class="brand-label" style="margin-bottom: 5px;">NEW_SEQUENCE</small>
+                <h2 id="modal-seq-title" class="modal-title">CREATE TASK</h2>
+            </div>
             
-            <input type="text" id="mNombre" placeholder="NOMBRE DE LA TAREA" class="modal-input" autocomplete="off">
-            
-            <select id="mPostura" class="modal-select">
-                <option value="sentado">POSTURA: SENTADO</option>
-                <option value="pie">POSTURA: DE PIE</option>
-            </select>
-            
-            <div class="d-flex gap-2 mt-4">
-                <button class="btn-tack w-100" style="background: #151515; color: #444;" onclick="cerrarModal()">CANCELAR</button>
-                <button class="btn-tack btn-start w-100" onclick="procesarTarea()">GUARDAR</button>
+            <div class="input-group">
+                <label>IDENTIFICATION</label>
+                <input type="text" id="task-name-input" class="modal-input" placeholder="TASK_NAME_ID" autofocus>
+            </div>
+
+            <div class="input-group">
+                <label>TARGET (HOURS)</label>
+                <input type="number" id="task-objetivo-horas" class="modal-input modal-input-number" min="0.25" max="24" step="0.25" value="2">
+            </div>
+
+            <div class="input-group">
+                <label>PHYSICAL STATE</label>
+                <div class="activity-selector">
+                    <label class="chip">
+                        <input type="radio" name="activity-type" value="sitting" checked>
+                        <span>🪑 SITTING</span>
+                    </label>
+                    <label class="chip">
+                        <input type="radio" name="activity-type" value="moving">
+                        <span>🏃 MOVING</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>AESTHETIC TRACE (HEX)</label>
+                <div class="color-picker-custom" style="display: flex; gap: 10px; align-items: center;">
+                    <input type="color" id="task-color-input" value="#2d6a4f">
+                    <input type="text" id="color-hex-display" class="modal-input" style="flex-grow: 1; text-align: center; color: rgba(255,255,255,0.4); font-size: 0.8rem; letter-spacing: 2px;" value="#2D6A4F" readonly>
+                </div>
+            </div>
+
+            <div class="modal-actions modal-actions-footer">
+                <button type="button" class="btn-secondary" onclick="cerrarModal()">DISCARD</button>
+                <button type="button" id="modal-btn-delete" class="btn-danger" onclick="eliminarTareaModal()" style="display: none;">DELETE</button>
+                <button type="button" id="modal-btn-submit" class="btn-primary" onclick="procesarTarea()">INITIALIZE</button>
             </div>
         </div>
     </div>
 
-    <script src="./render.js"></script>
+    <!-- require() debe ejecutarse desde aquí (inline): si bootstrap se carga con src=, __dirname no aplica y fallan los require relativos en renderer/ -->
+    <script>
+        require('./renderer/bootstrap.js');
+    </script>
 </body>
 </html>

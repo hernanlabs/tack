@@ -1,74 +1,82 @@
-# ⏱️ Tack
-**Master your focus, optimize your results.**
+# Tack
 
-Tack is an activity-driven productivity tracker developed by **HabitOS**. It provides a high-end interface to monitor your tasks in real-time, helping you eliminate wasted time and boost performance through structured sessions and biomechanical awareness.
+**Enfocá el trabajo. Medí el tiempo. Todo en local.**
 
----
-
-## ✨ Key Features
-
-* **Activity Control:** High-precision tracking for your work sessions with a clean, distraction-free interface.
-* **Biomechanical Awareness:** Built-in alerts for stretching and posture changes (Seated/Standing) to keep your body healthy while you work.
-* **Deep Focus Mode:** One-click fullscreen interface to eliminate desktop distractions and stay in the zone.
-* **Smart Progress Bars:** Real-time visual feedback on your daily goals and hydration levels.
-* **Local Persistence:** Your data stays with you. All activities are saved locally in a JSON database for maximum privacy.
-* **Zero-Setup Portable:** No installation required. Just download, run, and start optimizing your time.
+Tack es una app de escritorio (Electron) para seguir tareas con cronómetro de alta frecuencia, objetivos en horas (`objetivoHoras`), tiempo acumulado persistido (`timeSpent`) y recordatorios de hidratación por tiempo — sin depender de la nube. Desarrollada en el ecosistema **HabitOS**.
 
 ---
 
-## 🎨 Aesthetics & Interface
+## Qué hace
 
-Tack is built with a **High-End Dark Aesthetic** designed to minimize eye strain and maximize concentration during long working sessions.
+- **Productividad:** lista de tareas con color, postura (sentado / en movimiento) y meta en horas; barra y línea de progreso hacia el objetivo; no podés cambiar de tarea mientras hay sesión activa (timer en marcha o pausado con tiempo acumulado hasta **Stop**).
+- **Navegación:** panel izquierdo con secciones (menú de bienvenida, productividad, hábitos y dashboard como vistas centrales) y animación de carrusel; modo pantalla completa desde el proceso principal.
+- **Pausas:** overlay de almuerzo / estiramiento con temporizador; el cronómetro principal se pausa al iniciar una pausa.
+- **Hidratación:** cuenta regresiva configurable (intervalo en `renderer/constants.js`); al confirmar se reinicia el plazo.
+- **Datos:** lectura/escritura de `tack_db.json` vía IPC en el proceso principal (privacidad y portabilidad).
 
-* **Deep Dark Palette:** A sophisticated background (`#050505`) with low-contrast panels for a premium feel.
-* **Elegant Typography:** Utilizing the **Inter** typeface with refined weights and high-precision tabular numbers.
-* **Minimalist Dashboard:** Clean lines and hidden clutter to ensure your current task remains the absolute center of attention.
-* **Bio-Sync Animations:** Subtle pulsing effects for alerts that communicate status without being intrusive or stressful.
+### Linux y sandbox de Electron
 
----
-
-## 🚀 Installation & Usage
-
-Tack is available as a **portable application** (no installation required) and as an **open-source project** for developers.
-
-### 📥 For Users (Ready to Run)
-1. **Download** the latest version for your operating system from the [Releases](https://github.com/hernanlabs/tack/releases) section.
-   * **Windows:** Download `Tack-Portable.exe`.
-   * **Linux:** Download `Tack.AppImage`.
-2. **Run:** Move the file to its own folder (to keep your `tack_db.json` organized) and double-click to start.
-3. **Enjoy:** Start tracking your activities and improving your productivity immediately.
-
-### 💻 For Developers (Source Code)
-If you want to explore the code or build it yourself:
-
-1. **Clone the repository:**
-   git clone https://github.com/tu-usuario/tack.git
-   cd tack
-
-2. **Install dependencies:**
-   npm install
-
-3. **Run in development mode:**
-   npm start
-
-4. **Build your own executable:**
-   npm run dist:win  # For Windows
-   npm run dist:linux # For Linux
+En muchas distribuciones el sandbox de Chromium falla sin configuración extra. El script `npm start` define `ELECTRON_DISABLE_SANDBOX=1` para poder abrir la ventana sin error. Para empaquetado, valorá [documentación oficial](https://www.electronjs.org/docs/latest/tutorial/sandbox) o políticas de tu entorno.
 
 ---
 
-## 👥 Credits & Legal
+## Uso rápido (usuarios)
 
-Tack is a product of the **HabitOS** ecosystem, focused on building tools for a more conscious and productive digital life.
-
-* **Concept & Vision:** HabitOS
-* **Lead Developer:** hernanlabs
-* **Design Philosophy:** High-End Minimalist & Biomechanical Ergonomics
-
-### ⚖️ License
-This project is licensed under the **ISC License**. 
-
-This means you are free to use, copy, modify, and distribute this software for any purpose, provided that the original copyright notice and this permission notice appear in all copies. 
+1. Instalá o descargá el binario para tu SO (p. ej. AppImage en Linux, portable en Windows) si publicás releases.
+2. Ejecutá la app; el archivo `tack_db.json` se guarda junto al uso habitual del proyecto o según lo defina `main.js`.
+3. Creá tareas, elegí una, **Start** / **Pause** / **Stop**; el tiempo se guarda al pausar y al detener.
 
 ---
-*Developed with focus and health in mind. Join the HabitOS community.*
+
+## Desarrollo
+
+### Requisitos
+
+- Node.js y npm
+- Electron (devDependency del proyecto)
+
+### Comandos
+
+```bash
+npm install
+npm start
+```
+
+Build de ejemplo (salida en `dist/`):
+
+```bash
+npm run dist:linux
+npm run dist:win
+```
+
+### Estructura del renderer (módulos)
+
+La lógica de interfaz no va en un único archivo: está partida en `renderer/` con **CommonJS** (`require` / `module.exports`), sin bundler, compatible con cómo Electron carga el HTML.
+
+| Módulo | Rol |
+|--------|-----|
+| `bootstrap.js` | Entrada: enlaza IPC, expone funciones globales para `onclick` del HTML, `DOMContentLoaded`. |
+| `state.js` | Estado mutable compartido (DB en memoria, cronómetro, modal, hidratación). |
+| `constants.js` | Intervalo de hidratación e IDs/vistas del carrusel. |
+| `db.js` | `loadDB` / `saveDB` vía `ipcRenderer`; hook `setAfterPersist` para refrescar UI. |
+| `task-helpers.js` | Funciones puras: formato de duración, % hacia objetivo, etiquetas de postura. |
+| `timer.js` | Cronómetro, `actualizarDisplay`, `controlTimer`, `sesionDeTareaEnCurso`. |
+| `tasks.js` | Modal crear/editar/borrar, lista de tareas, `renderUI`. |
+| `breaks.js` | Overlay de pausas. |
+| `hydration.js` | UI y lógica del panel de hidratación. |
+| `navigation.js` | Carrusel de secciones y sincronización con FX de menú/productividad. |
+| `fx.js` | Canvas HUD (menú) y red de partículas (productividad), un solo loop `requestAnimationFrame`. |
+
+El proceso principal sigue en `main.js` (ventana, fullscreen, rutas de DB).
+
+---
+
+## Créditos y licencia
+
+- **Concepto:** HabitOS  
+- **Desarrollo:** según `package.json` (`author` / `developer`)  
+- **Licencia:** ISC (ver archivo de licencia del repositorio si existe).
+
+---
+
+*Pensado para sesiones largas, datos locales y una interfaz oscura y legible.*

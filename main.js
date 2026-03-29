@@ -17,10 +17,12 @@ if (!fs.existsSync(DB_PATH)) {
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1280,
-        height: 800,
-        minWidth: 1000,
-        minHeight: 700,
+        // Tamaño = área de la página (sin barra de título extra en el cálculo); coincide con el layout CSS
+        useContentSize: true,
+        width: 1400,
+        height: 900,
+        minWidth: 1200,
+        minHeight: 760,
         backgroundColor: '#050505',
         title: 'Tack',
         titleBarStyle: 'hiddenInset',
